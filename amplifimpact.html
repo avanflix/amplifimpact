@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmplifImpact — Media for Movements</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  /* ── TOKENS ──────────────────────────────────────── */
+  :root {
+    --ink:    #09090b;
+    --offink: #111114;
+    --card:   #16161a;
+    --lime:   #c8f135;
+    --cyan:   #00e5ff;
+    --coral:  #ff4d5a;
+    --mist:   #f0ede8;
+    --dim:    #6b7280;
+    --border: rgba(255,255,255,0.07);
+    --bebas: 'Bebas Neue', sans-serif;
+    --dm:    'DM Sans', sans-serif;
+    --mono:  'Fragment Mono', monospace;
+    --ease:  cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ── RESET ───────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--mist);
+    font-family: var(--dm);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ───────────────────────────────── */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--lime);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s, width 0.2s var(--ease), height 0.2s var(--ease), background 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor.big { width: 44px; height: 44px; background: var(--lime); }
+
+  /* ── NAV ─────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(9,9,11,0.6);
+  }
+ .nav-logo {
+    display: flex;
+    align-items: center;
+    font-family: var(--bebas);
+    font-size: 26px;
+    letter-spacing: 0.04em;
+    color: var(--mist);
+    text-decoration: none;
+  }
+  /* .nav-logo span { color: var(--lime); } */
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--dim); text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .logo-circle {
+    position: relative;
+    display: inline-block;
+    color: #0d0b1f; /* dark text for contrast */
+    z-index: 2;
+  }
+  
+  /* Circle */
+  .logo-circle::before {
+    content: "";
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    background: #d4ff3a;
+    border-radius: 50%;
+    left: -10px;              /* 👈 KEY: anchor to text start */
+    top: 50%;
+    transform: translate(-17%, -55%);
+    z-index: -1;              /* 👈 behind text ONLY */
+  }
+  
+  /* Highlight I */
+  .highlight-i {
+    color: var(--lime);
+  }
+
+
+  .nav-links a:hover { color: var(--lime); }
+  .nav-cta {
+    background: var(--lime); color: var(--ink);
+    font-family: var(--dm); font-weight: 600; font-size: 13px;
+    padding: 10px 22px; border: none; border-radius: 4px;
+    cursor: none; letter-spacing: 0.04em; text-transform: uppercase;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: #d4ff3a; transform: translateY(-2px); }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh; padding: 140px 48px 80px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(200,241,53,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em;
+    color: var(--lime); text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 24px;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 28px; height: 1px; background: var(--lime);
+  }
+  .hero h1 {
+    font-family: var(--bebas); font-size: clamp(72px, 9vw, 130px);
+    line-height: 0.92; letter-spacing: 0.01em;
+    color: var(--mist);
+  }
+  .hero h1 .accent { color: var(--lime); display: block; }
+  .hero h1 .stroke {
+    -webkit-text-stroke: 1.5px var(--mist); color: transparent;
+  }
+  .hero-sub {
+    margin-top: 32px; font-size: 17px; font-weight: 300; color: var(--dim);
+    max-width: 420px; line-height: 1.7;
+  }
+  .hero-sub strong { color: var(--mist); font-weight: 400; }
+  .hero-actions { margin-top: 44px; display: flex; gap: 16px; align-items: center; }
+  .btn-primary {
+    background: var(--lime); color: var(--ink); font-weight: 700;
+    font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 16px 36px; border: none; border-radius: 4px; cursor: none;
+    transition: transform 0.15s var(--ease), background 0.15s;
+  }
+  .btn-primary:hover { transform: translateY(-3px); background: #d4ff3a; }
+  .btn-ghost {
+    border: 1px solid var(--border); color: var(--dim); background: none;
+    font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 15px 30px; border-radius: 4px; cursor: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--mist); color: var(--mist); }
+
+  /* Hero right: big rotating badge + stats */
+  .hero-right { position: relative; display: flex; flex-direction: column; gap: 32px; }
+  .hero-badge {
+    width: 180px; height: 180px; border-radius: 50%;
+    border: 1px solid var(--lime); position: relative;
+    animation: spin-slow 20s linear infinite;
+    flex-shrink: 0; align-self: flex-end;
+  }
+  .hero-badge svg { width: 100%; height: 100%; }
+  .hero-badge-center {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-size: 28px;
+  }
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .stat-card:hover { border-color: var(--lime); transform: translateY(-4px); }
+  .stat-num {
+    font-family: var(--bebas); font-size: 52px; line-height: 1;
+    color: var(--lime);
+  }
+  .stat-label { font-size: 13px; color: var(--dim); margin-top: 4px; letter-spacing: 0.04em; }
+  .marquee-wrap {
+    overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 18px 0; margin: 80px 0 0;
+  }
+  .marquee {
+    display: flex; gap: 60px; white-space: nowrap;
+    animation: marquee 25s linear infinite;
+    font-family: var(--bebas); font-size: 22px; letter-spacing: 0.06em; color: var(--dim);
+  }
+  .marquee span { color: var(--lime); margin-right: 20px; }
+
+  /* ── SERVICES ─────────────────────────────────────── */
+  section { padding: 120px 48px; }
+  .section-tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    color: var(--lime); text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+  .section-tag::before {
+    content: ''; display: inline-block; width: 6px; height: 6px;
+    background: var(--lime); border-radius: 50%;
+  }
+  .section-title {
+    font-family: var(--bebas); font-size: clamp(52px, 7vw, 96px);
+    line-height: 0.93; color: var(--mist); margin-bottom: 60px;
+    letter-spacing: 0.01em;
+  }
+  .section-title em {
+    font-style: normal; -webkit-text-stroke: 1px var(--mist); color: transparent;
+  }
+
+  .services-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+  }
+  .service-card {
+    background: var(--card); padding: 48px 44px;
+    position: relative; overflow: hidden;
+    transition: background 0.3s;
+  }
+  .service-card::before {
+    content: attr(data-num);
+    position: absolute; top: 32px; right: 40px;
+    font-family: var(--bebas); font-size: 100px; line-height: 1;
+    color: rgba(255,255,255,0.03); pointer-events: none;
+    transition: color 0.3s;
+  }
+  .service-card:hover { background: #1c1c22; }
+  .service-card:hover::before { color: rgba(200,241,53,0.06); }
+  .service-icon {
+    width: 48px; height: 48px; border-radius: 10px;
+    background: rgba(200,241,53,0.1); display: flex; align-items: center;
+    justify-content: center; font-size: 22px; margin-bottom: 28px;
+    border: 1px solid rgba(200,241,53,0.2);
+  }
+  .service-card h3 {
+    font-family: var(--bebas); font-size: 34px; letter-spacing: 0.02em;
+    color: var(--mist); margin-bottom: 14px;
+  }
+  .service-card p { font-size: 15px; color: var(--dim); line-height: 1.7; }
+  .service-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px;
+  }
+  .tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+    color: var(--lime); background: rgba(200,241,53,0.08);
+    border: 1px solid rgba(200,241,53,0.2); border-radius: 4px;
+    padding: 4px 10px; text-transform: uppercase;
+  }
+
+  /* ── BENEFITS ─────────────────────────────────────── */
+  .benefits { background: var(--offink); }
+  .benefits-inner {
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start;
+  }
+  .benefits-left p {
+    font-size: 18px; font-weight: 300; color: var(--dim); line-height: 1.8;
+    margin-top: 24px;
+  }
+  .benefits-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+  .benefit-item {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 28px 0; border-bottom: 1px solid var(--border);
+    transition: padding-left 0.3s var(--ease);
+  }
+  .benefit-item:hover { padding-left: 12px; }
+  .benefit-num {
+    font-family: var(--mono); font-size: 11px; color: var(--lime);
+    margin-top: 4px; flex-shrink: 0;
+  }
+  .benefit-item h4 { font-size: 18px; font-weight: 600; color: var(--mist); margin-bottom: 6px; }
+  .benefit-item p { font-size: 14px; color: var(--dim); line-height: 1.6; }
+
+  /* ── PROCESS ──────────────────────────────────────── */
+  .process-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; margin-top: 16px;
+  }
+  .process-step {
+    background: var(--card); padding: 44px 36px;
+    position: relative; overflow: hidden;
+  }
+  .process-step::after {
+    content: '→';
+    position: absolute; right: -1px; top: 50%; transform: translateY(-50%);
+    font-size: 20px; color: var(--lime);
+    z-index: 2;
+  }
+  .process-step:last-child::after { display: none; }
+  .step-num {
+    font-family: var(--bebas); font-size: 72px; line-height: 1;
+    color: rgba(200,241,53,0.12); margin-bottom: 20px;
+    display: block;
+  }
+  .process-step h4 { font-size: 18px; font-weight: 600; color: var(--mist); margin-bottom: 10px; }
+  .process-step p { font-size: 13px; color: var(--dim); line-height: 1.7; }
+  .process-step .step-duration {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 11px; color: var(--lime);
+    background: rgba(200,241,53,0.08); border: 1px solid rgba(200,241,53,0.2);
+    padding: 4px 10px; border-radius: 4px; margin-top: 16px;
+  }
+
+  /* ── PORTFOLIO ────────────────────────────────────── */
+  .portfolio { background: var(--offink); }
+  .portfolio-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 16px;
+  }
+  .portfolio-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    transition: transform 0.3s var(--ease), border-color 0.3s;
+  }
+  .portfolio-card:hover { transform: translateY(-8px); border-color: rgba(200,241,53,0.3); }
+  .portfolio-thumb {
+    height: 200px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .portfolio-thumb .thumb-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--a), var(--b));
+    opacity: 0.7;
+  }
+  .portfolio-thumb .thumb-label {
+    position: relative; font-family: var(--bebas); font-size: 48px;
+    color: rgba(255,255,255,0.15); letter-spacing: 0.08em; z-index: 1;
+  }
+  .portfolio-thumb .thumb-tag {
+    position: absolute; top: 14px; left: 14px; z-index: 2;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--mist);
+    background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 4px;
+    backdrop-filter: blur(8px);
+  }
+  .portfolio-body { padding: 24px; }
+  .portfolio-org { font-family: var(--mono); font-size: 11px; color: var(--lime); letter-spacing: 0.08em; text-transform: uppercase; }
+  .portfolio-body h4 { font-size: 18px; font-weight: 600; color: var(--mist); margin: 8px 0 8px; }
+  .portfolio-body p { font-size: 13px; color: var(--dim); line-height: 1.6; }
+  .portfolio-result {
+    display: flex; gap: 20px; margin-top: 18px; padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .result-stat .num { font-family: var(--bebas); font-size: 28px; color: var(--lime); }
+  .result-stat .label { font-size: 11px; color: var(--dim); }
+
+  /* ── TESTIMONIALS ─────────────────────────────────── */
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 16px;
+  }
+  .testi-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 36px 32px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .testi-card:hover { border-color: rgba(200,241,53,0.25); transform: translateY(-5px); }
+  .testi-quote {
+    font-family: var(--bebas); font-size: 80px; line-height: 0.8;
+    color: rgba(200,241,53,0.12); position: absolute; top: 20px; right: 28px;
+  }
+  .testi-text {
+    font-size: 16px; font-weight: 300; line-height: 1.75;
+    color: var(--mist); position: relative; z-index: 1;
+    margin-bottom: 28px;
+  }
+  .testi-author { display: flex; align-items: center; gap: 14px; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, #c8f135, #00e5ff);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; color: var(--ink); flex-shrink: 0;
+  }
+  .testi-name { font-weight: 600; font-size: 14px; color: var(--mist); }
+  .testi-role { font-size: 12px; color: var(--dim); }
+  .testi-org { font-family: var(--mono); font-size: 10px; color: var(--lime); letter-spacing: 0.08em; }
+
+  /* ── PRICING ──────────────────────────────────────── */
+  .pricing { background: var(--offink); }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 16px;
+  }
+  .price-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 40px 36px;
+    transition: transform 0.3s var(--ease), border-color 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .price-card:hover { transform: translateY(-6px); border-color: rgba(200,241,53,0.3); }
+  .price-card.featured {
+    border-color: var(--lime);
+    background: linear-gradient(160deg, #1c2210 0%, var(--card) 60%);
+  }
+  .price-badge {
+    position: absolute; top: 20px; right: 20px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink); background: var(--lime);
+    padding: 4px 10px; border-radius: 4px;
+  }
+  .price-tier {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    color: var(--lime); text-transform: uppercase; margin-bottom: 14px;
+  }
+  .price-name { font-family: var(--bebas); font-size: 40px; color: var(--mist); margin-bottom: 8px; }
+  .price-amount {
+    font-family: var(--bebas); font-size: 64px; line-height: 1;
+    color: var(--lime); margin: 16px 0 4px;
+  }
+  .price-amount sup { font-size: 30px; }
+  .price-cycle { font-size: 13px; color: var(--dim); margin-bottom: 32px; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .price-features li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 14px; color: var(--dim);
+  }
+  .price-features li::before {
+    content: '✓'; color: var(--lime); font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .price-features li.no { color: rgba(255,255,255,0.2); }
+  .price-features li.no::before { content: '✗'; color: rgba(255,255,255,0.15); }
+  .price-cta {
+    display: block; text-align: center; margin-top: 36px;
+    border: 1px solid var(--border); color: var(--dim);
+    padding: 14px; border-radius: 8px; font-size: 14px; font-weight: 600;
+    text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .price-cta:hover { background: rgba(255,255,255,0.05); border-color: var(--mist); color: var(--mist); }
+  .price-card.featured .price-cta {
+    background: var(--lime); border-color: var(--lime); color: var(--ink);
+  }
+  .price-card.featured .price-cta:hover { background: #d4ff3a; }
+  .price-note {
+    text-align: center; margin-top: 40px;
+    font-family: var(--mono); font-size: 12px; color: var(--dim);
+  }
+  .price-note span { color: var(--lime); }
+
+  /* ── TEAM ──────────────────────────────────────── */
+
+  .team {
+  background: var(--offink);
+  }
+  
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 16px;
+  }
+  
+  .team-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px 26px;
+    text-align: center;
+    transition: transform 0.3s var(--ease), border-color 0.3s;
+  }
+  
+  .team-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(200,241,53,0.3);
+  }
+  
+  .team-img {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--border);
+  }
+  
+  .team-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .team-name {
+    font-family: var(--bebas);
+    font-size: 28px;
+    color: var(--mist);
+    margin-bottom: 6px;
+  }
+  
+  .team-role {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--lime);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  
+  .team-desc {
+    font-size: 14px;
+    color: var(--dim);
+  }
+  
+  .team-note {
+    text-align: center;
+    margin-top: 40px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+
+  /* ── FAQ ─────────────────────────────────────────── */
+  .faq-list {
+    display: flex; flex-direction: column; gap: 2px;
+    border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+    max-width: 860px; margin: 16px auto 0;
+  }
+  .faq-item { background: var(--card); }
+  .faq-q {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 32px; font-size: 16px; font-weight: 500; color: var(--mist);
+    cursor: none; user-select: none;
+    transition: color 0.2s;
+  }
+  .faq-q:hover { color: var(--lime); }
+  .faq-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(200,241,53,0.08); border: 1px solid rgba(200,241,53,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--lime); flex-shrink: 0;
+    transition: transform 0.3s var(--ease), background 0.2s;
+  }
+  .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--lime); color: var(--ink); }
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s var(--ease), padding 0.3s;
+    padding: 0 32px; font-size: 15px; color: var(--dim); line-height: 1.75;
+  }
+  .faq-item.open .faq-a { max-height: 300px; padding-bottom: 28px; }
+
+  /* ── CONTACT CTA ─────────────────────────────────── */
+  .cta-section {
+    background: var(--lime); padding: 100px 48px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: 'Amplifi'; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: var(--bebas); font-size: 22vw; color: rgba(0,0,0,0.06);
+    white-space: nowrap; pointer-events: none; line-height: 1;
+  }
+  .cta-section .section-tag { color: var(--ink); opacity: 0.5; justify-content: center; }
+  .cta-section .section-tag::before { background: var(--ink); }
+  .cta-section h2 {
+    font-family: var(--bebas); font-size: clamp(56px, 8vw, 110px);
+    line-height: 0.93; color: var(--ink); position: relative; z-index: 1;
+    margin-bottom: 24px;
+  }
+  .cta-section p { font-size: 18px; color: rgba(9,9,11,0.65); max-width: 500px; margin: 0 auto 44px; position: relative; z-index: 1; }
+  .cta-actions { display: flex; gap: 16px; justify-content: center; position: relative; z-index: 1; }
+  .btn-dark {
+    background: var(--ink); color: var(--lime); font-weight: 700;
+    font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 18px 44px; border: none; border-radius: 6px; cursor: none;
+    transition: transform 0.15s var(--ease), background 0.15s;
+  }
+  .btn-dark:hover { transform: translateY(-3px); background: #111; }
+  .btn-outline-dark {
+    background: none; color: var(--ink);
+    border: 2px solid rgba(9,9,11,0.3);
+    font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 16px 36px; border-radius: 6px; cursor: none; font-weight: 600;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-outline-dark:hover { border-color: var(--ink); background: rgba(0,0,0,0.08); }
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  footer {
+    background: var(--offink); border-top: 1px solid var(--border);
+    padding: 60px 48px 40px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px;
+  }
+  .footer-brand p { font-size: 14px; color: var(--dim); margin-top: 16px; max-width: 280px; line-height: 1.7; }
+  .footer-bottom {
+    grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between;
+    padding-top: 40px; border-top: 1px solid var(--border);
+    font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: 0.06em;
+  }
+  footer h5 { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); margin-bottom: 20px; }
+  footer ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  footer ul a { font-size: 14px; color: var(--dim); text-decoration: none; transition: color 0.2s; }
+  footer ul a:hover { color: var(--lime); }
+
+  /* ── ANIMATIONS ──────────────────────────────────── */
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* hero entrance */
+  .hero-eyebrow { animation: fade-up 0.8s var(--ease) 0.2s both; }
+  .hero h1 { animation: fade-up 0.9s var(--ease) 0.35s both; }
+  .hero-sub { animation: fade-up 0.8s var(--ease) 0.5s both; }
+  .hero-actions { animation: fade-up 0.8s var(--ease) 0.65s both; }
+  .hero-right { animation: fade-in 1s var(--ease) 0.5s both; }
+
+  /* ── RESPONSIVE ──────────────────────────────────── */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; padding: 120px 32px 60px; }
+    .hero-right { display: none; }
+    .services-grid, .pricing-grid, .portfolio-grid, .testimonials-grid { grid-template-columns: 1fr 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .benefits-inner { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr 1fr; }
+    nav { padding: 18px 32px; }
+    section { padding: 80px 32px; }
+  }
+  @media (max-width: 640px) {
+    .services-grid, .pricing-grid, .portfolio-grid, .testimonials-grid,
+    .process-steps { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 58px; }
+    nav .nav-links { display: none; }
+    footer { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+<a href="#" class="nav-logo">
+  <span class="logo-circle">AM</span>PLIF<span class="highlight-i">I</span>MPACT
+</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#team">team</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <button class="nav-cta">Start a Project</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Media for Movements</div>
+    <h1>
+      We Make
+      <span class="accent">Impact</span>
+      <span class="stroke">Louder.</span>
+    </h1>
+    <p class="hero-sub">
+      The <strong>dedicated media partner</strong> for NGOs, social enterprises, and changemakers who are tired of blending in. We build brands that demand attention and content that actually moves people.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary">See Our Work</button>
+      <button class="btn-ghost">Free Discovery Call →</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-badge">
+      <svg viewBox="0 0 200 200" fill="none">
+        <defs>
+          <path id="circle" d="M 100,100 m -72,0 a 72,72 0 1,1 144,0 a 72,72 0 1,1 -144,0"/>
+        </defs>
+        <circle cx="100" cy="100" r="95" stroke="#c8f135" stroke-width="0.5" opacity="0.4"/>
+        <circle cx="100" cy="100" r="78" stroke="#c8f135" stroke-width="0.3" opacity="0.2"/>
+        <text fill="#c8f135" font-family="Fragment Mono" font-size="11" letter-spacing="5">
+          <textPath href="#circle">MEDIA · BRANDING · DIGITAL · IMPACT · DESIGN · </textPath>
+        </text>
+      </svg>
+      <div class="hero-badge-center">🌍</div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-num">20+</div>
+        <div class="stat-label">Impact orgs served</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4.8×</div>
+        <div class="stat-label">Avg. engagement lift</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">₹0</div>
+        <div class="stat-label">Wasted budget (we track ROI)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3 days</div>
+        <div class="stat-label">Average first deliverable</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>●</span> NGO Branding <span>●</span> Impact Videos <span>●</span> Social Media <span>●</span> Web Design <span>●</span> Annual Reports <span>●</span> Fundraising Decks <span>●</span> CSR Communication <span>●</span> Visual Identity <span>●</span> Reels & Shorts <span>●</span> Campaign Strategy &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span>●</span> NGO Branding <span>●</span> Impact Videos <span>●</span> Social Media <span>●</span> Web Design <span>●</span> Annual Reports <span>●</span> Fundraising Decks <span>●</span> CSR Communication <span>●</span> Visual Identity <span>●</span> Reels & Shorts <span>●</span> Campaign Strategy
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-tag">What we do</div>
+  <h2 class="section-title">Four Ways<br>We <em>Amplifi</em> You</h2>
+  <div class="services-grid">
+    <div class="service-card" data-num="01">
+      <div class="service-icon">
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2">
+    <path d="M3 7v6l8 8 10-10-8-8H7a4 4 0 0 0-4 4z"></path>
+    <circle cx="9" cy="9" r="1"></circle>
+  </svg>
+</div>
+      <h3>Branding & Identity</h3>
+      <p>Your mission deserves a visual language that stops the scroll, earns trust in 3 seconds, and scales across every channel from field banners to UN presentations. We build brands that don't just look good, they <em>mean</em> something.</p>
+      <div class="service-tags">
+        <span class="tag">Logo & Mark</span>
+        <span class="tag">Brand Guidelines</span>
+        <span class="tag">Colour & Type</span>
+        <span class="tag">Stationery</span>
+        <span class="tag">Templates</span>
+      </div>
+    </div>
+    <div class="service-card" data-num="02">
+      <div class="service-icon">
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+  </svg>
+</div>
+      <h3>Content Creation</h3>
+      <p>Video, photography, written content, and data storytelling produced with the same quality standards as top-tier agencies, built specifically for the vocabulary of social impact. We make your numbers feel human and your stories feel urgent.</p>
+      <div class="service-tags">
+        <span class="tag">Impact Videos</span>
+        <span class="tag">Reels & Shorts</span>
+        <span class="tag">Annual Reports</span>
+        <span class="tag">Infographics</span>
+        <span class="tag">Photography</span>
+      </div>
+    </div>
+    <div class="service-card" data-num="03">
+      <div class="service-icon">
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+       stroke="black" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">
+
+
+    <path d="M3 3v18h18"></path>
+    <polyline points="7 14 11 10 14 13 20 7"></polyline>
+
+  </svg>
+  </div>
+        <h3>Digital Marketing</h3>
+        <p>Strategy-first, data-backed digital campaigns that grow your donor base, Amplifi your reach, and attract the CSR partnerships you deserve. We don't post for the sake of posting every piece of content has a job to do.</p>
+        <div class="service-tags">
+          <span class="tag">Social Strategy</span>
+          <span class="tag">Paid Ads</span>
+          <span class="tag">Email Campaigns</span>
+          <span class="tag">SEO</span>
+          <span class="tag">Analytics</span>
+        </div>
+      </div>
+      <div class="service-card" data-num="04">
+        <div class="service-icon">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+         stroke="black" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+  
+      <!-- Browser window -->
+      <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+  
+      <!-- Top bar -->
+      <line x1="3" y1="8" x2="21" y2="8"></line>
+  
+      <!-- Dots -->
+      <circle cx="6" cy="6" r="0.7"></circle>
+      <circle cx="8" cy="6" r="0.7"></circle>
+      <circle cx="10" cy="6" r="0.7"></circle>
+  
+      <!-- Code symbols -->
+      <polyline points="10 12 7 15 10 18"></polyline>
+      <polyline points="14 12 17 15 14 18"></polyline>
+      <line x1="12" y1="12" x2="11" y2="18"></line>
+  
+    </svg>
+  </div>
+      <h3>Web Design & Dev</h3>
+      <p>Websites built for trust, conversion, and impact storytelling not just aesthetics. From NGO portals and donation pages to CSR microsite and impact hubs, we design for the people you're trying to reach and the funders you need to impress.</p>
+      <div class="service-tags">
+        <span class="tag">Landing Pages</span>
+        <span class="tag">Full Websites</span>
+        <span class="tag">Donation Flows</span>
+        <span class="tag">Impact Hubs</span>
+        <span class="tag">Mobile-First</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits" id="why">
+  <div class="benefits-inner">
+    <div class="benefits-left">
+      <div class="section-tag">Why AmplifImpact</div>
+      <h2 class="section-title">Built for<br><em>the sector</em>.<br>Built to<br>perform.</h2>
+      <p>You've worked with general agencies before. They don't get the vocabulary, the stakeholders, or the fact that your audience is simultaneously a 22-year-old on Instagram and a 58-year-old CSR committee member. We do.</p>
+    </div>
+    <ul class="benefits-list">
+      <li class="benefit-item reveal">
+        <span class="benefit-num">01</span>
+        <div>
+          <h4>Sector-fluent from day one</h4>
+          <p>We understand SHGs, SDGs, FCRA, BRSR, CSR-1, and why your annual report needs to speak to both a government auditor and a first-generation donor. No onboarding tax.</p>
+        </div>
+      </li>
+      <li class="benefit-item reveal reveal-delay-1">
+        <span class="benefit-num">02</span>
+        <div>
+          <h4>Story + strategy, not just content</h4>
+          <p>Every piece we create serves a purpose in a larger communication architecture. We don't make beautiful things that go nowhere we make content that moves people toward action.</p>
+        </div>
+      </li>
+      <li class="benefit-item reveal reveal-delay-2">
+        <span class="benefit-num">03</span>
+        <div>
+          <h4>Affordable without compromising quality</h4>
+          <p>We've designed our packages knowing your budget constraints. Impact organisations shouldn't have to choose between looking credible and staying solvent.</p>
+        </div>
+      </li>
+      <li class="benefit-item reveal reveal-delay-3">
+        <span class="benefit-num">04</span>
+        <div>
+          <h4>Speed that matches the urgency of your work</h4>
+          <p>First deliverables in 72 hours. Campaigns turned around in days, not weeks. Because your deadline for a funder pitch doesn't move because a designer is busy.</p>
+        </div>
+      </li>
+      <li class="benefit-item reveal reveal-delay-4">
+        <span class="benefit-num">05</span>
+        <div>
+          <h4>Measurable outcomes, not vanity metrics</h4>
+          <p>We track what matters: donor conversion, CSR proposal response rates, volunteer signups, grant application success rates. We tie every campaign to your actual goals.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-tag">How it works</div>
+  <h2 class="section-title">From Brief<br>to <em>Brilliant</em></h2>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <span class="step-num">01</span>
+      <h4>Discovery Call</h4>
+      <p>We learn your mission, your audience, your goals, and the specific problem you're trying to solve. No briefs, no forms just a real conversation.</p>
+      <div class="step-duration">⏱ 30 min</div>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <span class="step-num">02</span>
+      <h4>Strategy & Proposal</h4>
+      <p>We return with a clear scope, timeline, and creative direction. You know exactly what you're getting, when, and why before a single pixel is designed.</p>
+      <div class="step-duration">⏱ 48 hrs</div>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <span class="step-num">03</span>
+      <h4>Creation & Collaboration</h4>
+      <p>We build. You review. Real-time feedback loops keep you in the process without making it your job. Revisions are a conversation, not a negotiation.</p>
+      <div class="step-duration">⏱ 3–14 days</div>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <span class="step-num">04</span>
+      <h4>Launch & Amplifi</h4>
+      <p>We don't just hand over files. We help you deploy, track performance, and iterate so the work keeps getting better after it goes live.</p>
+      <div class="step-duration">⏱ Ongoing</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="portfolio">
+  <div class="section-tag">Our work</div>
+  <h2 class="section-title">Impact<br>in the Wild</h2>
+  <div class="portfolio-grid">
+    <div class="portfolio-card reveal">
+      <div class="portfolio-thumb" style="--a:#1a3a6a;--b:#0288d1;">
+         <img src="https://www.hubspot.com/hubfs/how-much-website-cost_0.webp" alt="Branding and web design project" style="position: absolute; width: 100%; height: 100%; object-fit: cover; top: 0; left: 0;">
+        <div class="thumb-bg"></div>
+        <div class="thumb-tag">Branding + Web</div>
+        <!-- <div class="thumb-label">WEB</div> -->
+      </div>
+      <div class="portfolio-body">
+        <div class="portfolio-org">Health NGO · Hyderabad</div>
+        <h4>Full Brand Overhaul & Donation Portal</h4>
+        <p>Rebuilt brand identity and donation experience for a 15-year-old adolescent health NGO ahead of a major CSR fundraise.</p>
+        <div class="portfolio-result">
+          <div class="result-stat"><div class="num">3.4×</div><div class="label">donation conversion</div></div>
+          <div class="result-stat"><div class="num">₹2.1Cr</div><div class="label">funds unlocked</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card reveal reveal-delay-1">
+      <div class="portfolio-thumb" style="--a:#0a0a2a;--b:#1565c0;">
+        <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1920&q=80"
+alt="Compact forest greenery"
+style="position: absolute; width: 100%; height: 100%; object-fit: cover; top: 0; left: 0;">
+        <div class="thumb-bg"></div>
+        <div class="thumb-tag">Video + Social</div>
+        <!-- <div class="thumb-label">VIDEO</div> -->
+      </div>
+      <div class="portfolio-body">
+        <div class="portfolio-org">Climate NGO · National</div>
+        <h4>Annual Impact Campaign — Miyawaki Forest Series</h4>
+        <p>12-episode Reels series documenting a Miyawaki forest from day 1 to month 18. Grew the org's Instagram from 2K to 38K followers.</p>
+        <div class="portfolio-result">
+          <div class="result-stat"><div class="num">38K</div><div class="label">new followers</div></div>
+          <div class="result-stat"><div class="num">7.2M</div><div class="label">organic reach</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card reveal reveal-delay-2">
+      <div class="portfolio-thumb" style="--a:#4a1a3a;--b:#a2477b;">
+           <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=600&h=400&fit=crop" alt="Web portal project" style="position: absolute; width: 100%; height: 100%; object-fit: cover; top: 0; left: 0;">
+        <div class="thumb-bg"></div>
+        <div class="thumb-tag">Report + Deck</div>
+        <!-- <div class="thumb-label">REPORT</div> -->
+      </div>
+      <div class="portfolio-body">
+        <div class="portfolio-org">Women's Enterprise · Telangana</div>
+        <h4>CSR Proposal + Annual Report Design</h4>
+        <p>Redesigned the CSR pitch deck and annual report for a women's micro-enterprise organisation. Led to 4 new CSR partnerships.</p>
+        <div class="portfolio-result">
+          <div class="result-stat"><div class="num">4 new</div><div class="label">CSR partners</div></div>
+          <div class="result-stat"><div class="num">₹85L</div><div class="label">secured</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card reveal">
+      <div class="portfolio-thumb" style="--a:#3a2a05;--b:#c8780a;">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop" alt="Education project" style="position: absolute; width: 100%; height: 100%; object-fit: cover; top: 0; left: 0;">
+        <div class="thumb-bg"></div>
+        <div class="thumb-tag">Brand Identity</div>
+        <!-- <div class="thumb-label">BRAND</div> -->
+      </div>
+      <div class="portfolio-body">
+        <div class="portfolio-org">Education Social Enterprise</div>
+        <h4>From Zero to Launch: Full Brand in 10 Days</h4>
+        <p>Brand identity, pitch deck, social templates, and launch campaign for an ed-tech startup targeting rural government schools.</p>
+        <div class="portfolio-result">
+          <div class="result-stat"><div class="num">10 days</div><div class="label">full delivery</div></div>
+          <div class="result-stat"><div class="num">Seed</div><div class="label">round closed</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card reveal reveal-delay-1">
+      <div class="portfolio-thumb" style="--a:#052a3a;--b:#00695c;">
+         <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&h=400&fit=crop" alt="Marketing campaign" style="position: absolute; width: 100%; height: 100%; object-fit: cover; top: 0; left: 0;">
+        <div class="thumb-bg"></div>
+        <div class="thumb-tag">Digital Marketing</div>
+        <!-- <div class="thumb-label">DIGITAL</div> -->
+      </div>
+      <div class="portfolio-body">
+        <div class="portfolio-org">Development Foundation</div>
+        <h4>CSR Partner Acquisition Campaign</h4>
+        <p>LinkedIn + email campaign targeting CSR heads of 50 NIFTY companies. Generated 14 discovery calls and 6 partnership MoUs.</p>
+        <div class="portfolio-result">
+          <div class="result-stat"><div class="num">14</div><div class="label">discovery calls</div></div>
+          <div class="result-stat"><div class="num">6 MoUs</div><div class="label">signed</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card reveal reveal-delay-2">
+      <div class="portfolio-thumb" style="--a:#0a0a2a;--b:#1565c0;">
+           <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&h=400&fit=crop" alt="Web portal project" style="position: absolute; width: 100%; height: 100%; object-fit: cover; top: 0; left: 0;">
+        <div class="thumb-bg"></div>
+        <div class="thumb-tag">Volunteer</div>
+        <!-- <div class="thumb-label">WEB</div> -->
+      </div>
+      <div class="portfolio-body">
+        <div class="portfolio-org">Livelihood Organisation</div>
+        <h4>Impact Hub — Donor + Volunteer Portal</h4>
+        <p>Full-stack impact hub with real-time programme data, donation gateway, volunteer signup, and CSR partner reporting dashboard.</p>
+        <div class="portfolio-result">
+          <div class="result-stat"><div class="num">220%</div><div class="label">more volunteer signups</div></div>
+          <div class="result-stat"><div class="num">Live</div><div class="label">dashboard</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-tag">From the field</div>
+  <h2 class="section-title">What <em>They</em><br>Actually Said</h2>
+  <div class="testimonials-grid">
+    <div class="testi-card reveal">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">AmplifImpact didn't just make us look good they made us look like what we actually are. Our CSR proposals started getting responses within 48 hours instead of 48 days.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">K</div>
+        <div>
+          <div class="testi-name">Kamal N.</div>
+          <div class="testi-role">Founder & CEO</div>
+          <div class="testi-org">NGO · Hyderabad</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-1">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">I've worked with four agencies before. AmplifImpact is the first one that understood what "social impact" actually means without me having to explain the whole sector from scratch.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">P</div>
+        <div>
+          <div class="testi-name">Priya V.</div>
+          <div class="testi-role">Communications Director</div>
+          <div class="testi-org">Social Enterprise · Bengaluru</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-2">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">They turned our annual report which was basically a spreadsheet with logos into something our board actually read and our donors shared on LinkedIn. That's wild.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">A</div>
+        <div>
+          <div class="testi-name">Ananya R.</div>
+          <div class="testi-role">Executive Director</div>
+          <div class="testi-org">Foundation · Delhi</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">The video series they made for our tree plantation programme hit 2 million views organically. We've never had that kind of reach. Our volunteer applications went up 400% that month.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div>
+          <div class="testi-name">Rajan M.</div>
+          <div class="testi-role">Programme Head</div>
+          <div class="testi-org">Environment NGO · Mumbai</div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="testi-card reveal reveal-delay-1">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">We went from "who are you?" to "we've heard of you" in 90 days. The brand they built for us opened doors we didn't even know existed. Worth every rupee.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">S</div>
+        <div>
+          <div class="testi-name">Sunita K.</div>
+          <div class="testi-role">Co-founder</div>
+          <div class="testi-org">Women's Enterprise · Telangana</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-2">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">Fast. Actually fast. I said "I need this for a UN event in 5 days" and they delivered in 3. The quality was outstanding. These people move like your mission actually matters to them.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">D</div>
+        <div>
+          <div class="testi-name">Divya S.</div>
+          <div class="testi-role">Global Fellow</div>
+          <div class="testi-org">Development Organisation</div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-tag">Investment</div>
+  <h2 class="section-title">Transparent<br><em>Pricing</em></h2>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-tier">Starter</div>
+      <div class="price-name">Amplifi Starter</div>
+      <div class="price-amount"><sup>₹</sup>18,000</div>
+      <div class="price-cycle">per month · 3-month minimum</div>
+      <ul class="price-features">
+        <li>Brand audit + quick-fix recommendations</li>
+        <li>12 social media posts/month (designed)</li>
+        <li>1 short video/month (Reels-optimised)</li>
+        <li>Monthly performance report</li>
+        <li>Email support (48hr response)</li>
+        <li class="no">Paid ad management</li>
+        <li class="no">Website work</li>
+        <li class="no">CSR proposal design</li>
+      </ul>
+      <a href="#" class="price-cta">Get Started</a>
+    </div>
+    <div class="price-card featured reveal reveal-delay-1">
+      <div class="price-badge">Most Popular</div>
+      <div class="price-tier">Growth</div>
+      <div class="price-name">Amplifi Pro</div>
+      <div class="price-amount"><sup>₹</sup>42,000</div>
+      <div class="price-cycle">per month · 3-month minimum</div>
+      <ul class="price-features">
+        <li>Full brand identity or refresh</li>
+        <li>24 social media posts/month</li>
+        <li>3 videos/month (long + short form)</li>
+        <li>Paid ad management (₹1L+ ad budget)</li>
+        <li>Monthly impact newsletter design</li>
+        <li>1 proposal or report design/month</li>
+        <li>Website maintenance + updates</li>
+        <li>Priority support (24hr response)</li>
+      </ul>
+      <a href="#" class="price-cta">Get Started</a>
+    </div>
+    <div class="price-card reveal reveal-delay-2">
+      <div class="price-tier">Scale</div>
+      <div class="price-name">Amplifi Scale</div>
+      <div class="price-amount">Custom</div>
+      <div class="price-cycle">built for your exact needs</div>
+      <ul class="price-features">
+        <li>Dedicated Creative Director (part-time)</li>
+        <li>Unlimited content creation</li>
+        <li>Full digital marketing suite</li>
+        <li>Custom website design + development</li>
+        <li>Annual report + CSR collateral</li>
+        <li>Campaign strategy + execution</li>
+        <li>Media training for leadership team</li>
+        <li>Same-day turnaround on urgent work</li>
+      </ul>
+      <a href="#" class="price-cta">Let's Talk</a>
+    </div>
+  </div>
+  <p class="price-note">All plans include a <span>free 30-minute discovery call</span>. Need a one-time project? We do those too ask us about project-based pricing.</p>
+</section>
+
+<!-- Team -->
+<section class="team" id="team">
+  <div class="section-tag">People</div>
+  <h2 class="section-title">Meet the<br><em>Team</em></h2>
+
+  <div class="team-grid">
+
+    <!-- Member 1 -->
+    <div class="team-card reveal">
+      <div class="team-img">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80" alt="Team Member">
+      </div>
+      <div class="team-name">Arjun Mehta</div>
+      <div class="team-role">Creative Director</div>
+      <p class="team-desc">Leads brand storytelling and visual direction across all campaigns.</p>
+    </div>
+
+    <!-- Member 2 -->
+    <div class="team-card reveal reveal-delay-1">
+      <div class="team-img">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80" alt="Team Member">
+      </div>
+      <div class="team-name">Sneha Kapoor</div>
+      <div class="team-role">Social Media Strategist</div>
+      <p class="team-desc">Builds engaging campaigns and manages audience growth.</p>
+    </div>
+
+    <!-- Member 3 -->
+    <div class="team-card reveal reveal-delay-2">
+      <div class="team-img">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80" alt="Team Member">
+      </div>
+      <div class="team-name">Rahul Verma</div>
+      <div class="team-role">Video Producer</div>
+      <p class="team-desc">Creates high-impact reels and video storytelling content.</p>
+    </div>
+
+  </div>
+
+  <p class="team-note">
+    A passionate team focused on storytelling, growth, and impact-driven branding.
+  </p>
+</section>
+
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-tag">Questions</div>
+  <h2 class="section-title" style="text-align:center;">You Asked.<br>We <em>Answer</em>.</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Do you only work with registered NGOs?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        No, we work with registered NGOs, Section 8 companies, social enterprises, CSR implementation agencies, development consultancies, and individual social entrepreneurs. If your work creates measurable positive change, we want to be part of telling that story.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        We're a small organisation with a very limited budget. Is there flexibility?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        Yes. We have a mission-first pricing philosophy. If you're working in an underserved area, operating with government or grassroots funding, or are in your first three years, we offer a subsidised rate on request. We also have a pro-bono slot for one organisation per quarter ask us about it.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How quickly can you start on a project?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        Typically within 48–72 hours of signing the agreement and receiving your brief. For urgent work a funder presentation due tomorrow, an event coming up this week we have a fast-track option. WhatsApp us directly and we'll tell you what's possible.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Will we own all the content and designs you create?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        Yes, fully. Upon final payment, all intellectual property source files, brand assets, videos, website code, copy transfers completely to you. No ongoing licensing fees. No hidden restrictions. Everything we make for you is yours.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        We've had bad experiences with agencies not understanding our work. How is this different?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        Fair. The difference is context: our team has worked inside the development sector not just for it. We understand the difference between outputs and outcomes, between an annual report for a donor and one for an auditor, between what looks good in a CSR pitch and what actually converts. We don't need explaining to. We start from fluency.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can you handle both Hindi/Telugu and English content?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        Yes. We work fluently in English, Hindi, and Telugu for written and visual content. For other regional languages, we work with verified translation partners who understand the context of social development communication not just literal translation.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What does the onboarding process look like?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        Discovery call (30 min) → proposal with scope, timeline, and pricing (within 48 hrs) → agreement sign-off → kick-off meeting with your brief → first deliverables within 72 hrs. That's the whole process. We believe good work starts with a clear brief and fast momentum, not endless paperwork.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Do you work on one-off projects or only retainer?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        Both. Monthly retainers are where we can do our best work consistent presence, deep context, compounding results. But we also do excellent one-off projects: annual reports, brand redesigns, event videos, CSR proposal decks, website builds. Project pricing is scoped per brief.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="contact">
+  <div class="section-tag">Ready?</div>
+  <h2>Your Mission<br>Deserves to<br>Be Heard.</h2>
+  <p>Stop being the best-kept secret in your sector. Let's build something that makes people stop, read, and act.</p>
+  <div class="cta-actions">
+    <button class="btn-dark">Book Free Discovery Call</button>
+    <button class="btn-outline-dark">See All Services</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.04em;">Amplif<span style="color:#c8f135;">I</span>mpact</div>
+    <p>Media built for movements. We exist to make the world's most important work impossible to ignore.</p>
+  </div>
+  <div>
+    <h5>Services</h5>
+    <ul>
+      <li><a href="#">Branding & Identity</a></li>
+      <li><a href="#">Content Creation</a></li>
+      <li><a href="#">Digital Marketing</a></li>
+      <li><a href="#">Web Design & Dev</a></li>
+    </ul>
+  </div>
+  <div>
+    <h5>Company</h5>
+    <ul>
+      <li><a href="#services">About Us</a></li>
+      <li><a href="#portfolio">Our Work</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#">Careers</a></li>
+    </ul>
+  </div>
+  <div>
+    <h5>Contact</h5>
+    <ul>
+      <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=Partnership@amlifimpact.com" target="_blank">Partnership@amplifimpact.com</a></li>
+      <li><a href="https://web.whatsapp.com/" target="_blank">WhatsApp Us</a></li>
+      <li><a href="https://www.instagram.com/" target="_blank">Instagram</a></li>
+      <li><a href="https://www.linkedin.com/" target="_blank">LinkedIn</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 AmplifImpact. Built for the sector.</span>
+    <span style="color:#c8f135;">Media for Movements.</span>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button,[onclick]').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+
+  // FAQ toggle
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
